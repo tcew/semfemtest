@@ -119,7 +119,8 @@ for N = 1:10
   end
   KG = cnt-1;
   EToVG = EToVG(1:KG,:);
-
+	    
+  %% reset geometric factors after stripping slithers
   va = EToVG(:,1)'; vb = EToVG(:,2)'; vc = EToVG(:,3)';
   xG = 0.5*(-(rG+sG)*VXG(va)+(1+rG)*VXG(vb)+(1+sG)*VXG(vc));
   yG = 0.5*(-(rG+sG)*VYG(va)+(1+rG)*VYG(vb)+(1+sG)*VYG(vc));
@@ -161,11 +162,14 @@ for N = 1:10
   condPreconA(N) = cond(AFEM\ASEM);
   eigPreconA{N} = sort(eig(AFEM\ASEM), 'ascend');
 
+  outName = sprintf('olson_N%d.mat', N);
+
+  save(outName, "r", "s", "AFEM", "ASEM")
 
   figure(2)
   hold on
   plot(eigPreconA{N}, N*ones(size(eigPreconA{N})), '-*')
-  title('Eigenvalues of preconditioned matrix')
+  title('Eigenvalues of AFEM\ASEM')
   xlabel('Eigenvalues')
   ylabel('Polynomial degree')
 end
